@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pagingapps.adapter.LoadingStateAdapter
 import com.example.pagingapps.adapter.QuoteListAdapter
 import com.example.pagingapps.databinding.ActivityMainBinding
 import com.example.pagingapps.ui.MainViewModel
@@ -23,11 +24,14 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = QuoteListAdapter()
         binding.rvQuote.layoutManager = LinearLayoutManager(this)
-        binding.rvQuote.adapter = adapter
+        binding.rvQuote.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
 
         mainViewModel.quote.observe(this) {
             adapter.submitData(lifecycle, it)
         }
     }
-
 }
